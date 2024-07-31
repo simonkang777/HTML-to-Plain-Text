@@ -11,9 +11,11 @@ def convert_html_to_text():
         html_encoded_text = data.get('text', '')
         # Decode HTML entities
         decoded_text = unescape(html_encoded_text)
-        # Optionally, remove HTML tags if you only need plain text
-        plain_text = re.sub(r'<[^>]+>', '', decoded_text)
-        return jsonify({'plain_text': plain_text})
+        # Replace <br /> tags with newline characters
+        text_with_newlines = re.sub(r'<br\s*/?>', '\n', decoded_text)
+        # Remove any remaining HTML tags
+        plain_text = re.sub(r'<[^>]+>', '', text_with_newlines)
+        return jsonify({'plain_text': plain_text.strip()})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
